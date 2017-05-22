@@ -159,8 +159,8 @@ if [ "$user" == "odoo" ]; then
 	sudo a2enmod proxy_connect
 	sudo a2enmod proxy_html
 
-	#TODO:
-	#Edit odoo mobile config.php to use localhost
+	echo "Update mobile config.php file"
+	sudo mv /home/odoo/config.php /home/odoo/mclaren/mobile/config.php
 
 	echo "Create and amend Apache .conf files"
 	sudo mv vm_ip_address.conf /etc/apache2/sites-available/"$vm_ip_address".conf
@@ -195,4 +195,3 @@ fi
 # TODO:
 # setup script as odoo service
 # auto run then stop odoo, drop default db, restore db backup
-# edit odoo mobile config.php to use localhost
