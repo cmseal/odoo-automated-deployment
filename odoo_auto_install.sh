@@ -140,7 +140,7 @@ if [ "$user" == "odoo" ]; then
 	echo "Fix wkhtmltopdf (which is shipped in a very old variant by Ubuntu/Debian)"
 	if wkhtmltopdf --help | grep -q "Reduced Functionality"; then
 	   echo "Fixing Wkhtmltopdf..."
-	   wget -P /tmp/ http://download.gna.org/wkhtmltopdf/0.12/0.12.2/wkhtmltox-0.12.2_linux-trusty-amd64.deb
+	   wget -q -P /tmp/ http://download.gna.org/wkhtmltopdf/0.12/0.12.2/wkhtmltox-0.12.2_linux-trusty-amd64.deb
 	   sudo apt-get --assume-yes install xfonts-75dpi
 	   sudo dpkg -i /tmp/wkhtmltox-0.12.2_linux-trusty-amd64.deb
 	   sudo rm /tmp/wkhtmltox-0.12.2_linux-trusty-amd64.deb
@@ -165,15 +165,16 @@ if [ "$user" == "odoo" ]; then
 	echo "Create and amend Apache .conf files"
 	sudo mv vm_ip_address.conf /etc/apache2/sites-available/"$vm_ip_address".conf
 	sudo mv vm_ip_address-mobile.conf /etc/apache2/sites-available/"$vm_ip_address"-mobile.conf
-	sudo sed -i -e 's/vm_ip_address/"$vm_ip_address"/g' /etc/apache2/sites-available/"$vm_ip_address".conf
-	sudo sed -i -e 's/vm_ip_address/"$vm_ip_address"/g' /etc/apache2/sites-available/"$vm_ip_address"-mobile.conf
+	sudo sed -i -e 's/vm_ip_address/'$vm_ip_address'/g' /etc/apache2/sites-available/"$vm_ip_address".conf
+	sudo sed -i -e 's/vm_ip_address/'$vm_ip_address'/g' /etc/apache2/sites-available/"$vm_ip_address"-mobile.conf
 
 	echo "Remove default Apache index and replace with redirect (just incase)"
 	sudo rm /var/www/html/index.html
-	sudp mv /home/odoo/index.html /var/www/html/index.html
+	sudo mv /home/odoo/index.html /var/www/html/index.html
 	sudo sed -i -e 's/vm_ip_address/"$vm_ip_address"/g' /var/www/html/index.html
 
 	echo "Make host directories to keep Apache happy"
+	sudo mkdir /var/www/vhosts
 	sudo mkdir /var/www/vhosts/"$vm_ip_address"
 	sudo mkdir /var/www/vhosts/"$vm_ip_address"/httpdocs
 
@@ -184,7 +185,7 @@ if [ "$user" == "odoo" ]; then
 	sudo service apache2 reload
 
 	echo "Make ./run_odoo.sh script"
-	chmod +x /home/odoo/run_odoo.sh
+	sudo chmod +x /home/odoo/run_odoo.sh
 
 	echo "Script completed!"
 	sudo touch /home/odoo/setup_completed
