@@ -48,7 +48,7 @@ project_repo_name=
 # Mobile project repo to clone
 mobile_project_repo_name=
 
-# VM IP Address (public IP for Digital Ocean)
+# VM IP Address (public IP for Digital Ocean, local IP for laptop hosted)
 vm_ip_address=
 
 
@@ -148,8 +148,6 @@ if [ "$user" == "odoo" ]; then
 	sudo a2enmod proxy_balancer
 	sudo a2enmod proxy_connect
 	sudo a2enmod proxy_html
-
-	git clone https://github.com/cmseal/odoo-automated-deployment.git
 
 	echo "Create and amend Apache .conf files"
 	sudo mv odoo-automated-deployment/vm_ip_address.conf /etc/apache2/sites-available/"$vm_ip_address".conf
