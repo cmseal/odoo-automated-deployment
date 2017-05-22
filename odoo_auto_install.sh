@@ -165,13 +165,13 @@ if [ "$user" == "odoo" ]; then
 	echo "Create and amend Apache .conf files"
 	sudo mv vm_ip_address.conf /etc/apache2/sites-available/"$vm_ip_address".conf
 	sudo mv vm_ip_address-mobile.conf /etc/apache2/sites-available/"$vm_ip_address"-mobile.conf
-	sudo sed -i -e 's/vm_ip_address/'$vm_ip_address'/g' /etc/apache2/sites-available/"$vm_ip_address".conf
-	sudo sed -i -e 's/vm_ip_address/'$vm_ip_address'/g' /etc/apache2/sites-available/"$vm_ip_address"-mobile.conf
+	sudo sed -i -e 's/vm_ip_address/'"$vm_ip_address"'/g' /etc/apache2/sites-available/"$vm_ip_address".conf
+	sudo sed -i -e 's/vm_ip_address/'"$vm_ip_address"'/g' /etc/apache2/sites-available/"$vm_ip_address"-mobile.conf
 
 	echo "Remove default Apache index and replace with redirect (just incase)"
 	sudo rm /var/www/html/index.html
 	sudo mv /home/odoo/index.html /var/www/html/index.html
-	sudo sed -i -e 's/vm_ip_address/"$vm_ip_address"/g' /var/www/html/index.html
+	sudo sed -i -e 's/vm_ip_address/'"$vm_ip_address"'/g' /var/www/html/index.html
 
 	echo "Make host directories to keep Apache happy"
 	sudo mkdir /var/www/vhosts
