@@ -78,8 +78,8 @@ if [ "$user" == "root" ]; then
 	echo "odoo:Unipart" | chpasswd
 	usermod -aG sudo odoo
 	echo "%sudo	ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
-	cp ./odoo-automated-deployment/* /home/odoo/
-	head -n 7 .ssh/authorized_keys > /home/odoo/user_pub_key
+	cp ~/odoo-automated-deployment/*.* /home/odoo/
+	head -n 7 ~/.ssh/authorized_keys > /home/odoo/user_pub_key
 	echo "@reboot /home/odoo/odoo_auto_install.sh > /home/odoo/setup.log 2>&1" > cron
 	crontab -u odoo cron
 	reboot
