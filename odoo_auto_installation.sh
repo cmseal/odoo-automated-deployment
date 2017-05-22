@@ -67,7 +67,7 @@ if [ "$user" == "root" ]; then
 	echo "odoo:Unipart" | chpasswd
 	usermod -aG sudo odoo
 	echo "%sudo	ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
-	cp odoo_auto_install.sh /home/odoo/
+	cp ./odoo-automated-deployment/* /home/odoo/
 	cp variables.txt /home/odoo/
 	head -n 7 .ssh/authorized_keys > /home/odoo/user_pub_key
 	echo "@reboot ./odoo_auto_install.sh > /home/odoo/setup.log 2>&1" > cron
@@ -150,8 +150,8 @@ if [ "$user" == "odoo" ]; then
 	sudo a2enmod proxy_html
 
 	echo "Create and amend Apache .conf files"
-	sudo mv odoo-automated-deployment/vm_ip_address.conf /etc/apache2/sites-available/"$vm_ip_address".conf
-	sudo mv odoo-automated-deployment/vm_ip_address-mobile.conf /etc/apache2/sites-available/"$vm_ip_address"-mobile.conf
+	sudo mv vm_ip_address.conf /etc/apache2/sites-available/"$vm_ip_address".conf
+	sudo mv vm_ip_address-mobile.conf /etc/apache2/sites-available/"$vm_ip_address"-mobile.conf
 	sudo sed -i -e 's/vm_ip_address/"$vm_ip_address"/g' /etc/apache2/sites-available/"$vm_ip_address".conf
 	sudo sed -i -e 's/vm_ip_address/"$vm_ip_address"/g' /etc/apache2/sites-available/"$vm_ip_address"-mobile.conf
 
@@ -170,7 +170,6 @@ if [ "$user" == "odoo" ]; then
 	sudo service apache2 reload
 
 	echo "Make ./run_odoo.sh script"
-	sudo mv odoo-automated-deployment/run_odoo.sh /home/odoo/run_odoo.sh
 	chmod +x /home/odoo/run_odoo.sh
 
 	sudo rm /home/odoo/variables.txt
