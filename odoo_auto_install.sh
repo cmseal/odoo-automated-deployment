@@ -46,16 +46,16 @@
 ## Script Variables ##
 
 # Your unipart username for git access
-unipart_username=""
+unipart_username="chrisseal"
 
 # Project repo name to clone (minus .git), e.g. project_repo_name="mclaren"
-project_repo_name=""
+project_repo_name="mclaren"
 
 # VM IP Address (public IP for Digital Ocean, local VM IP for laptop hosted), e.g. vm_ip_address="127.0.0.1"
-vm_ip_address=""
+vm_ip_address="46.101.41.217"
 
 # Mobile project repo to clone (minus .git), e.g. mobile_project_repo_name="odoo_mobile"
-mobile_project_repo_name=""
+mobile_project_repo_name="odoo_mobile"
 
 ######  Please don't edit below this line  ######
 
