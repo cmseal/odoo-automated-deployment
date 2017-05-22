@@ -68,7 +68,7 @@ if [ "$user" == "root" ]; then
 		exit 1;
 	fi
 	
-	if [[ ! -f ~/*.gz && ! -f ~/*.bz2 ]]; then
+	if [[ -f ~/*.gz && -f ~/*.bz2 ]]; then
 		echo "No db backup found. Copy a odoo*.gz or odoo*.bz2 and try again."
 		exit 1;
 	fi
