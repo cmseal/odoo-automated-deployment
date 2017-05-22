@@ -4,35 +4,41 @@
 #
 # This script does the following:
 # 
-#  1) Setup 'odoo' user and ssh access using it
-#  2) Clone Odoo core
-#  3) Clone project repo
-#  4) Clone mobile project repo
-#  5) Update Ubuntu
-#  6) Install all python packages required
-#  7) Setup PostgreSQL and user
-#  8) Drop the default db
-#  9) Restore the provided db
-# 10) Install and setup Apache and PHP
-# 11) Configure Apache vhosts for Odoo and Mobile interfaces
-# 12) Create the run_odoo.sh script for use in Screen (or not, if you press Enter)
+#  1) Setup 'odoo' user and ssh your access for using it
+#  2) REBOOT - so you'll get disconnected
+#  3) Clone Odoo core
+#  4) Clone project repo
+#  5) Clone mobile project repo
+#  6) Update Ubuntu
+#  7) Install all python packages required
+#  8) Setup PostgreSQL and user
+#  9) Run Odoo core (for db setup), then exit
+# 10) Drop the default db and restore the provided db
+# 11) Install and setup Apache and PHP for multiple workers and mobile interface
+# 12) Configure Apache vhosts for Odoo and Mobile interfaces
+# 13) Create the run_odoo.sh script for use in Screen (or not, if you press Enter)
 #
 ###### INSTRUCTIONS ######
 #
 # 1) Set the four script variables below
 #
-# 2) Copy this script to your new VM
+# 2) Copy a single custom db backup ending either .bz2 or .gz to ~/
 #
-# Optional: copy a single custom db backup ending either .bz2 or .gz
+# 3) Run: chmod +x odoo_auto_install.sh
 #
-# 3) Login to the VM and run: chmod +x odoo_auto_install.sh
+# 4) Run: ./odoo_auto_install.sh
 #
-# 4) In the same terminal, run: ./odoo_auto_install.sh
+# 5) Wait about 10-15 minutes for the script to complete.
 #
-# 5) Wait about 15 minutes for the script to complete.
+# 6) The automated process is complete when 'setup_complete' file appears in /home/odoo/
 #
-# 6) The main Odoo interface will be on: http://<your server ip>/
-#    The mobile interface will be on: http://<your server ip>/mobile
+# 7) Run: ./run_odoo.sh from inside a Screen session
+#
+#    The main Odoo interface will be on: http://<vm_ip_address>
+#
+#    The mobile interface will be on: http://<vm_ip_address>/mobile
+#
+#    Logging is to /var/log/odoo/odoo.log 
 #
 ######
 
@@ -40,37 +46,41 @@
 ## Script Variables ##
 
 # Your unipart username for git access
-unipart_username=
+unipart_username=""
 
-# Project repo name to clone
-project_repo_name=
+# Project repo name to clone (minus .git), e.g. project_repo_name="mclaren"
+project_repo_name=""
 
-# Mobile project repo to clone
-mobile_project_repo_name=
+# VM IP Address (public IP for Digital Ocean, local VM IP for laptop hosted), e.g. vm_ip_address="127.0.0.1"
+vm_ip_address=""
 
-# VM IP Address (public IP for Digital Ocean, local IP for laptop hosted)
-vm_ip_address=
+# Mobile project repo to clone (minus .git), e.g. mobile_project_repo_name="odoo_mobile"
+mobile_project_repo_name=""
 
-
-######  Don't edit below this line  ######
+######  Please don't edit below this line  ######
 
 user=`whoami`
 
 if [ "$user" == "root" ]; then
 
-	if [ ! -r "~/odoo*.gz" || ! -r "~/odoo*.bz2" ]; then
+	if test "$unipart_username" = "" || test "$project_repo_name" = "" || test "$vm_ip_address" = ""; then
+		echo "Ensure the first three script variables have been edited in this file, then re-run it"
+		exit 1;
+	fi
+	
+	if [ ! -r "~/odoo*.gz" ] && [ ! -r "~/odoo*.bz2" ]; then
 		echo "No db backup found. Copy a odoo*.gz or odoo*.bz2 and try again."
 		exit 1;
 	fi
+	
 	echo "Create Odoo user and associated permissions"
 	adduser odoo --disabled-password --gecos ""
 	echo "odoo:Unipart" | chpasswd
 	usermod -aG sudo odoo
 	echo "%sudo	ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 	cp ./odoo-automated-deployment/* /home/odoo/
-	cp variables.txt /home/odoo/
 	head -n 7 .ssh/authorized_keys > /home/odoo/user_pub_key
-	echo "@reboot ./odoo_auto_install.sh > /home/odoo/setup.log 2>&1" > cron
+	echo "@reboot /home/odoo/odoo_auto_install.sh > /home/odoo/setup.log 2>&1" > cron
 	crontab -u odoo cron
 	reboot
 fi
@@ -149,6 +159,9 @@ if [ "$user" == "odoo" ]; then
 	sudo a2enmod proxy_connect
 	sudo a2enmod proxy_html
 
+	#TODO:
+	#Edit odoo mobile config.php to use localhost
+
 	echo "Create and amend Apache .conf files"
 	sudo mv vm_ip_address.conf /etc/apache2/sites-available/"$vm_ip_address".conf
 	sudo mv vm_ip_address-mobile.conf /etc/apache2/sites-available/"$vm_ip_address"-mobile.conf
@@ -157,7 +170,8 @@ if [ "$user" == "odoo" ]; then
 
 	echo "Remove default Apache index and replace with redirect (just incase)"
 	sudo rm /var/www/html/index.html
-	sudo touch /var/www/html/index.html
+	sudp mv /home/odoo/index.html /var/www/html/index.html
+	sudo sed -i -e 's/vm_ip_address/"$vm_ip_address"/g' /var/www/html/index.html
 
 	echo "Make host directories to keep Apache happy"
 	sudo mkdir /var/www/vhosts/"$vm_ip_address"
@@ -172,7 +186,6 @@ if [ "$user" == "odoo" ]; then
 	echo "Make ./run_odoo.sh script"
 	chmod +x /home/odoo/run_odoo.sh
 
-	sudo rm /home/odoo/variables.txt
 	echo "Script completed!"
 	sudo touch /home/odoo/setup_completed
 
@@ -180,5 +193,5 @@ fi
 
 # TODO:
 # setup script as odoo service
-
-#read -rsp $'Press any key to continue...\n' -n1 key
+# auto run then stop odoo, drop default db, restore db backup
+# edit odoo mobile config.php to use localhost
