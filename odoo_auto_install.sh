@@ -36,7 +36,7 @@
 #
 #    The main Odoo interface will be on: http://<vm_ip_address>
 #
-#    The mobile interface will be on: http://<vm_ip_address>/mobile
+#    The mobile interface will be on: http://<vm_ip_address>:81
 #
 #    Logging is to /var/log/odoo/odoo.log 
 #
@@ -125,7 +125,7 @@ if [ "$user" == "odoo" ]; then
 
 	echo "Setup PostgreSQL"
 	sudo apt-get install postgresql --assume-yes
-	##TODO:
+	##TODO can't do su here:
 	su postgres sh -c "createuser -d -A $(whoami)"
 
 	echo "Install python packages"
@@ -187,11 +187,13 @@ if [ "$user" == "odoo" ]; then
 	echo "Make ./run_odoo.sh script"
 	sudo chmod +x /home/odoo/run_odoo.sh
 
+	##TODO: Run Odoo once to let it generate data and initialise the default db, then stop it
+	
+	##TODO: Dump the db, then restore the one provided
+
 	echo "Script completed!"
 	sudo touch /home/odoo/setup_completed
 
 fi
 
-# TODO:
-# setup script as odoo service
-# auto run then stop odoo, drop default db, restore db backup
+# TODO: setup script as odoo service
