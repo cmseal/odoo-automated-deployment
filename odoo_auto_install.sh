@@ -79,6 +79,7 @@ if [ "$user" == "root" ]; then
 	usermod -aG sudo odoo
 	echo "%sudo	ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 	cp ~/odoo-automated-deployment/*.* /home/odoo/
+	cp ~/*.\{bz2,gz} /home/odoo/
 	head -n 7 ~/.ssh/authorized_keys > /home/odoo/user_pub_key
 	echo "@reboot /home/odoo/odoo_auto_install.sh > /home/odoo/setup.log 2>&1" > cron
 	crontab -u odoo cron
@@ -88,24 +89,24 @@ fi
 if [ "$user" == "odoo" ]; then
 
 	echo "Setup access info"
-	mkdir /home/odoo/.ssh
-	ssh-keyscan git.unipart.io > /home/odoo/.ssh/known_hosts
-	chmod 600 /home/odoo/.ssh/known_hosts	
-	head -n 7 /home/odoo/user_pub_key > /home/odoo/.ssh/authorized_keys
-	sudo rm /home/odoo/user_pub_key
-	chmod 600 /home/odoo/.ssh/authorized_keys
-	chmod 700 /home/odoo/.ssh
+	mkdir ~/.ssh
+	ssh-keyscan git.unipart.io > ~/.ssh/known_hosts
+	chmod 600 ~/.ssh/known_hosts	
+	head -n 7 ~/user_pub_key > ~/.ssh/authorized_keys
+	sudo rm ~/user_pub_key
+	chmod 600 ~/.ssh/authorized_keys
+	chmod 700 ~/.ssh
 
 	echo "Update Ubuntu"
 	sudo apt-get update
 	sudo apt-get dist-upgrade --assume-yes
 
 	echo "Clone Odoo from git"
-	cd /home/odoo/
+	cd ~
 	git clone https://github.com/mcb30/odoo.git --depth 20 --branch import
 
 	echo "Clone project from git"
-	cd /home/odoo/
+	cd ~
 	##TODO:
 	git clone "$unipart_username"@git.unipart.io:/home/scm/"$project_repo_name".git
 
@@ -117,11 +118,11 @@ if [ "$user" == "odoo" ]; then
 	fi
 
 	echo "Create Odoo 10 addon symlinks"
-	sudo mkdir -p /home/odoo/.local/share/Odoo/addons/10.0
-	ln -sf /home/odoo/mclaren/odoo_addons/mclaren /home/odoo/.local/share/Odoo/addons/10.0/
-	ln -sf /home/odoo/mclaren/odoo_addons/mclaren_import /home/odoo/.local/share/Odoo/addons/10.0/
-	ln -sf /home/odoo/mclaren/odoo_addons/print /home/odoo/.local/share/Odoo/addons/10.0/
-	ln -sf /home/odoo/mclaren/odoo_addons/edi /home/odoo/.local/share/Odoo/addons/10.0/
+	sudo mkdir -p ~/.local/share/Odoo/addons/10.0
+	ln -sf ~/"$project_repo_name"/odoo_addons/"$project_repo_name" ~/.local/share/Odoo/addons/10.0/
+	ln -sf ~/"$project_repo_name"/odoo_addons"$project_repo_name"_import ~/.local/share/Odoo/addons/10.0/
+	ln -sf ~/"$project_repo_name"/odoo_addons/print ~/.local/share/Odoo/addons/10.0/
+	ln -sf ~/"$project_repo_name"/odoo_addons/edi ~/.local/share/Odoo/addons/10.0/
 
 	echo "Setup PostgreSQL"
 	sudo apt-get install postgresql --assume-yes
@@ -160,7 +161,7 @@ if [ "$user" == "odoo" ]; then
 	sudo a2enmod proxy_html
 
 	echo "Update mobile config.php file"
-	sudo mv /home/odoo/config.php /home/odoo/mclaren/mobile/config.php
+	sudo mv ~/config.php ~/mclaren/mobile/config.php
 
 	echo "Create and amend Apache .conf files"
 	sudo mv vm_ip_address.conf /etc/apache2/sites-available/"$vm_ip_address".conf
@@ -170,7 +171,7 @@ if [ "$user" == "odoo" ]; then
 
 	echo "Remove default Apache index and replace with redirect (just incase)"
 	sudo rm /var/www/html/index.html
-	sudo mv /home/odoo/index.html /var/www/html/index.html
+	sudo mv ~/index.html /var/www/html/index.html
 	sudo sed -i -e 's/vm_ip_address/'"$vm_ip_address"'/g' /var/www/html/index.html
 
 	echo "Make host directories to keep Apache happy"
@@ -184,16 +185,31 @@ if [ "$user" == "odoo" ]; then
 	sudo a2dissite 000-default
 	sudo service apache2 reload
 
+	## TODO: setup script as odoo service
 	echo "Make ./run_odoo.sh script"
-	sudo chmod +x /home/odoo/run_odoo.sh
+	sudo chmod +x ~/run_odoo.sh
 
-	##TODO: Run Odoo once to let it generate data and initialise the default db, then stop it
+	echo "Start Odoo service and wait (first time running)"
+	sudo service odoo start
+	sleep 3m
 	
-	##TODO: Dump the db, then restore the one provided
-
+	echo "Stop Odoo service, drop the db and restore the one provided"
+	sudo service odoo stop
+	sleep 30s
+	dumpdb odoo
+	
+	if [ ! -f ~/*.gz ]; then
+		gunzip -ck *.gz | psql postgres
+	else
+		bzcat *.bz2 | psql postgres
+	fi
+	
+	echo "Start Odoo with restored db"
+	sudo service odoo start
+	
+	sudo touch ~/setup_completed
 	echo "Script completed!"
-	sudo touch /home/odoo/setup_completed
-
+	
 fi
 
-# TODO: setup script as odoo service
+
