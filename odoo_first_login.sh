@@ -4,8 +4,6 @@ touch cron-empty
 crontab -u odoo cron-empty
 sudo crontab -u postgres cron-empty
 
-sudo sed -i '$d' /etc/ssh/sshd_config
-
 echo "Clone Odoo from git"
 cd ~
 git clone https://github.com/mcb30/odoo.git --depth 20 --branch import
@@ -22,15 +20,10 @@ fi
 
 echo "Create Odoo 10 addon symlinks"
 sudo mkdir -p ~/.local/share/Odoo/addons/10.0
-ln -sf ~/"$project_repo_name"/odoo_addons/"$project_repo_name" ~/.local/share/Odoo/addons/10.0/
-ln -sf ~/"$project_repo_name"/odoo_addons"$project_repo_name"_import ~/.local/share/Odoo/addons/10.0/
-ln -sf ~/"$project_repo_name"/odoo_addons/print ~/.local/share/Odoo/addons/10.0/
-ln -sf ~/"$project_repo_name"/odoo_addons/edi ~/.local/share/Odoo/addons/10.0/
-
-echo "Setup PostgreSQL"
-sudo apt-get install postgresql --assume-yes
-##TODO can't do su here:
-su postgres sh -c "createuser -d -A $(whoami)"
+sudo ln -sf ~/"$project_repo_name"/odoo_addons/"$project_repo_name" ~/.local/share/Odoo/addons/10.0/
+sudo ln -sf ~/"$project_repo_name"/odoo_addons"$project_repo_name"_import ~/.local/share/Odoo/addons/10.0/
+sudo ln -sf ~/"$project_repo_name"/odoo_addons/print ~/.local/share/Odoo/addons/10.0/
+sudo ln -sf ~/"$project_repo_name"/odoo_addons/edi ~/.local/share/Odoo/addons/10.0/
 
 echo "Install python packages"
 sudo apt-get --assume-yes install python-passlib python-werkzeug python-lxml \
