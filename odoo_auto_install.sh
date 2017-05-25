@@ -85,7 +85,7 @@ if [ "$user" == "root" ]; then
 	echo "odoo:Unipart" | chpasswd
 	usermod -aG sudo odoo
 	echo "%sudo	ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
-	cp *.* /home/odoo/
+	cp ~/odoo-automated-deployment/*.* /home/odoo/
 	cd ~
 	cp *.\{bz2,gz} /home/odoo/
 	head -n 7 ~/.ssh/authorized_keys > /home/odoo/user_pub_key
