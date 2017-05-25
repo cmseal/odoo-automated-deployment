@@ -87,7 +87,7 @@ if [ "$user" == "root" ]; then
 	echo "%sudo	ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 	cp ~/odoo-automated-deployment/*.* /home/odoo/
 	cp ~/*.bz2 /home/odoo/
-	cp ~/*.bz2 /home/odoo/
+	cp ~/*.gz /home/odoo/
 	head -n 7 ~/.ssh/authorized_keys > /home/odoo/user_pub_key
 	echo "@reboot /home/odoo/odoo_auto_install.sh > /home/odoo/setup.log 2>&1" > cron
 	crontab -u odoo cron
@@ -107,7 +107,7 @@ if [ "$user" == "odoo" ]; then
 	chmod 600 ~/.ssh/known_hosts
 	chmod 700 ~/.ssh
 
-        echo 'unipart_username='"$unipart_username"'; project_repo_name='"$project_repo_name"'; mobile_project_repo_name='"$mobile_project_repo_name"' | cat - odoo_first_login.sh > temp && mv temp odoo_first_login.sh
+        #echo 'unipart_username='"$unipart_username"'; project_repo_name='"$project_repo_name"'; mobile_project_repo_name='"$mobile_project_repo_name"' | cat - odoo_first_login.sh > temp && mv temp odoo_first_login.sh
 	sudo chmod +x odoo_first_login.sh
 	 
 fi
