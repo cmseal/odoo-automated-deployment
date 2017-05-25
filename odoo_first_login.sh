@@ -1,3 +1,7 @@
+echo "Remove setup cron job"
+touch cron-empty
+crontab -u odoo cron-empty
+
 echo "Clone project from git"
 cd ~
 ##TODO:
@@ -47,7 +51,7 @@ sudo service apache2 reload
   
 echo "Start Odoo service and wait (first time running)"
 sudo service odoo start
-sleep 3m
+sleep 5m
 
 echo "Stop Odoo service, drop the db and restore the one provided"
 sudo service odoo stop
