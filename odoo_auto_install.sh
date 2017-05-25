@@ -76,8 +76,9 @@ if [ "$user" == "root" ]; then
 	fi
 	
 	echo "Update Ubuntu"
-	sudo apt-get update
-	sudo apt-get dist-upgrade --assume-yes
+	apt-get update
+	apt-get dist-upgrade --assume-yes
+	apt-get install postgresql --assume-yes
 	
 	echo "Create Odoo user and associated permissions"
 	adduser odoo --disabled-password --gecos ""
@@ -89,6 +90,8 @@ if [ "$user" == "root" ]; then
 	head -n 7 ~/.ssh/authorized_keys > /home/odoo/user_pub_key
 	echo "@reboot /home/odoo/odoo_auto_install.sh > /home/odoo/setup.log 2>&1" > cron
 	crontab -u odoo cron
+	echo "@reboot createuser -d -A odoo" > postgres_cron
+	crontab -u postgres postgres_cron
 	echo "ForceCommand /home/odoo/odoo_first_login.sh" >> /etc/ssh/sshd_config
 	reboot
 fi
