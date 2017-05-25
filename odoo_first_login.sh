@@ -2,8 +2,7 @@ echo "Remove setup cron job"
 touch cron-empty
 crontab -u odoo cron-empty
 
-##TODO:
-# Remove ForceCommand line from /etc/ssh/sshd_config
+sudo sed -i '$d' /etc/ssh/sshd_config
 
 echo "Clone Odoo from git"
 cd ~
