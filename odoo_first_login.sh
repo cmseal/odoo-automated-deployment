@@ -42,7 +42,7 @@ libapache2-mod-php7.0 php7.0-xmlrpc
 echo "Fix wkhtmltopdf (which is shipped in a very old variant by Ubuntu/Debian)"
 if wkhtmltopdf --help | grep -q "Reduced Functionality"; then
    echo "Fixing Wkhtmltopdf..."
-   wget -q -P /tmp/ http://download.gna.org/wkhtmltopdf/0.12/0.12.2/wkhtmltox-0.12.2_linux-trusty-amd64.deb
+   wget -P /tmp/ http://download.gna.org/wkhtmltopdf/0.12/0.12.2/wkhtmltox-0.12.2_linux-trusty-amd64.deb
 	 sudo apt-get --assume-yes install xfonts-75dpi
    sudo dpkg -i /tmp/wkhtmltox-0.12.2_linux-trusty-amd64.deb
    sudo rm /tmp/wkhtmltox-0.12.2_linux-trusty-amd64.deb
