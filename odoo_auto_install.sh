@@ -93,7 +93,6 @@ if [ "$user" == "root" ]; then
 	crontab -u odoo cron
 	echo "@reboot createuser -d -A odoo" > postgres_cron
 	crontab -u postgres postgres_cron
-	#echo "ForceCommand /home/odoo/odoo_first_login.sh" >> /etc/ssh/sshd_config
 	reboot
 fi
 
@@ -108,7 +107,7 @@ if [ "$user" == "odoo" ]; then
 	chmod 600 ~/.ssh/known_hosts
 	chmod 700 ~/.ssh
 
-        echo 'unipart_username="$unipart_username"; project_repo_name="$project_repo_name"; mobile_project_repo_name="$mobile_project_repo_name"' | cat - odoo_first_login.sh > temp && mv temp odoo_first_login.sh
+        echo 'unipart_username='"$unipart_username"'; project_repo_name='"$project_repo_name"'; mobile_project_repo_name='"$mobile_project_repo_name"' | cat - odoo_first_login.sh > temp && mv temp odoo_first_login.sh
 	sudo chmod +x odoo_first_login.sh
 	 
 fi
