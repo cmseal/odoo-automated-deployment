@@ -72,7 +72,11 @@ sudo a2ensite "$vm_ip_address"
 sudo a2ensite "$vm_ip_address"-mobile
 sudo a2dissite 000-default
 
-## TODO: setup script as odoo service
+echo "Setup odoo service"
+sudo mv odoo.service /etc/systemd/system
+sudo mkdir /var/lib/odoo
+sudo chown odoo:root /var/lib/odoo -R
+
 echo "Make ./run_odoo.sh script"
 sudo chmod +x ~/run_odoo.sh
 
@@ -82,11 +86,11 @@ sudo mv ~/config.php ~/mclaren/mobile/config.php
 sudo service apache2 reload
 
 echo "Start Odoo service and wait (first time running)"
-sudo service odoo start
+sudo systemctl odoo.service start
 sleep 5m
 
 echo "Stop Odoo service, drop the db and restore the one provided"
-sudo service odoo stop
+sudo systemctl odoo.service stop
 sleep 30s
 dumpdb odoo
 
@@ -97,7 +101,7 @@ else
 fi
 	
 echo "Start Odoo with restored db"
-sudo service odoo start
+sudo systemctl odoo.service start
 
 sudo touch ~/setup_completed
 echo "Script completed!"
