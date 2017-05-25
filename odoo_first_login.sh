@@ -32,16 +32,11 @@ python-pychart python-reportlab python-mako python-psutil \
 python-jinja2 python-docutils python-xlrd python-pypdf python-xlwt \
 python-decorator python-requests python-paramiko python-psycogreen \
 python-gevent python-ply node-less wkhtmltopdf apache2 php7.0 \
-libapache2-mod-php7.0 php7.0-xmlrpc
+libapache2-mod-php7.0 php7.0-xmlrpc xfonts-75dpi
 
-echo "Fix wkhtmltopdf (which is shipped in a very old variant by Ubuntu/Debian)"
-if wkhtmltopdf --help | grep -q "Reduced Functionality"; then
-   echo "Fixing Wkhtmltopdf..."
-   wget -P /tmp/ http://download.gna.org/wkhtmltopdf/0.12/0.12.2/wkhtmltox-0.12.2_linux-trusty-amd64.deb
-	 sudo apt-get --assume-yes install xfonts-75dpi
-   sudo dpkg -i /tmp/wkhtmltox-0.12.2_linux-trusty-amd64.deb
-   sudo rm /tmp/wkhtmltox-0.12.2_linux-trusty-amd64.deb
-fi
+echo "Update wkhtmltopdf"
+sudo dpkg -i wkhtmltox-0.12.2_linux-trusty-amd64.deb
+sudo rm wkhtmltox-0.12.2_linux-trusty-amd64.deb
 
 echo "Setup Apache mods"
 sudo /etc/init.d/apache2 start
@@ -85,7 +80,7 @@ echo "Update mobile config.php file"
 sudo mv ~/config.php ~/mclaren/mobile/config.php
  
 sudo service apache2 reload
-  
+
 echo "Start Odoo service and wait (first time running)"
 sudo service odoo start
 sleep 5m
