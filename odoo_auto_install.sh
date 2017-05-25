@@ -92,7 +92,7 @@ if [ "$user" == "root" ]; then
 	crontab -u odoo cron
 	echo "@reboot createuser -d -A odoo" > postgres_cron
 	crontab -u postgres postgres_cron
-	echo "ForceCommand /home/odoo/odoo_first_login.sh" >> /etc/ssh/sshd_config
+	#echo "ForceCommand /home/odoo/odoo_first_login.sh" >> /etc/ssh/sshd_config
 	reboot
 fi
 
