@@ -19,7 +19,7 @@ if test "$mobile_project_repo_name" != ""; then
 fi
 
 echo "Create Odoo 10 addon symlinks"
-sudo mkdir -p ~/.local/share/Odoo/addons/10.0
+mkdir -p ~/.local/share/Odoo/addons/10.0
 sudo ln -sf ~/"$project_repo_name"/odoo_addons/"$project_repo_name" ~/.local/share/Odoo/addons/10.0/
 sudo ln -sf ~/"$project_repo_name"/odoo_addons"$project_repo_name"_import ~/.local/share/Odoo/addons/10.0/
 sudo ln -sf ~/"$project_repo_name"/odoo_addons/print ~/.local/share/Odoo/addons/10.0/
@@ -72,10 +72,10 @@ sudo a2ensite "$vm_ip_address"
 sudo a2ensite "$vm_ip_address"-mobile
 sudo a2dissite 000-default
 
-echo "Setup odoo service"
-sudo mv odoo.service /etc/systemd/system
-sudo mkdir /var/lib/odoo
-sudo chown odoo:root /var/lib/odoo -R
+#echo "Setup odoo service"
+#sudo mv odoo.service /etc/systemd/system
+#sudo mkdir /var/lib/odoo
+#sudo chown odoo:root /var/lib/odoo -R
 
 echo "Make ./run_odoo.sh script"
 sudo chmod +x ~/run_odoo.sh
@@ -85,13 +85,13 @@ sudo mv ~/config.php ~/mclaren/mobile/config.php
  
 sudo service apache2 reload
 
-echo "Start Odoo service and wait (first time running)"
-sudo systemctl odoo.service start
-sleep 5m
+#echo "Start Odoo service and wait (first time running)"
+#sudo systemctl odoo.service start
+#sleep 5m
 
-echo "Stop Odoo service, drop the db and restore the one provided"
-sudo systemctl odoo.service stop
-sleep 30s
+#echo "Stop Odoo service, drop the db and restore the one provided"
+#sudo systemctl odoo.service stop
+#sleep 30s
 dumpdb odoo
 
 if [ ! -f ~/*.gz ]; then
@@ -100,8 +100,8 @@ else
 	bzcat *.bz2 | psql postgres
 fi
 	
-echo "Start Odoo with restored db"
-sudo systemctl odoo.service start
+#echo "Start Odoo with restored db"
+#sudo systemctl odoo.service start
 
 sudo touch ~/setup_completed
 echo "Script completed!"
