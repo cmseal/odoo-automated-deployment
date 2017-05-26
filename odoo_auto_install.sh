@@ -1,28 +1,10 @@
 #!/bin/bash
 
-###### READ ME FIRST ######
-#
-# This script does the following:
-# 
-#  1) Setup 'odoo' user and ssh your access for using it
-#  2) REBOOT - so you'll get disconnected
-#  3) Clone Odoo core
-#  4) Clone project repo
-#  5) Clone mobile project repo
-#  6) Update Ubuntu
-#  7) Install all python packages required
-#  8) Setup PostgreSQL and user
-#  9) Run Odoo core (for db setup), then exit
-# 10) Drop the default db and restore the provided db
-# 11) Install and setup Apache and PHP for multiple workers and mobile interface
-# 12) Configure Apache vhosts for Odoo and Mobile interfaces
-# 13) Create the run_odoo.sh script for use in Screen (or not, if you press Enter)
-#
-###### INSTRUCTIONS ######
+###### BASIC INSTRUCTIONS ######
 #
 # 1) Set the four script variables below
 #
-# 2) Copy a single custom db backup ending either .bz2 or .gz to ~/
+# 2) Copy a single db backup ending either .bz2 or .gz to ~/ for root
 #
 # 3) Run: chmod +x odoo_auto_install.sh
 #
@@ -30,9 +12,11 @@
 #
 # 5) After the server disconnects you to reboot, reconnect but as the odoo user
 #
-# 6) The automated process will continue, and complete when 'setup_complete' file appears in /home/odoo/
+# 6) Run: ./odoo_first_login.sh in the Odoo user folder
 #
-#    At this point, Odoo is setup as a service (service odoo start|stop|reload)
+# 7) The automated process will continue, and complete when 'setup_complete' file appears in Odoo user folder
+#
+#    At this point, Odoo is setup and started as a service (service odoo start|stop|reload)
 #
 #    The main Odoo interface will be on: http://<vm_ip_address>
 #
@@ -40,7 +24,7 @@
 #
 #    Logging is to /var/log/odoo/odoo.log
 #
-#    You can manually run Odoo as normal, /home/odoo/odoo/odoo-bin..., as long as the service is stopped first
+#    Technical information is in README.md, if you've not used this before
 #
 ######
 
@@ -119,5 +103,3 @@ if [ "$user" == "odoo" ]; then
 	sudo chmod +x odoo_first_login.sh
 	 
 fi
-
-
