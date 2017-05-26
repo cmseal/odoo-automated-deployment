@@ -88,6 +88,7 @@ if [ "$user" == "root" ]; then
 	cp ~/odoo-automated-deployment/*.* /home/odoo/
 	cp ~/*.bz2 /home/odoo/
 	cp ~/*.gz /home/odoo/
+	##TODO: if this doesn't exist, don't bother
 	head -n 7 ~/.ssh/authorized_keys > /home/odoo/user_pub_key
 	echo "@reboot /home/odoo/odoo_auto_install.sh > /home/odoo/setup.log 2>&1" > cron
 	crontab -u odoo cron
@@ -99,7 +100,8 @@ fi
 if [ "$user" == "odoo" ]; then
 
 	echo "Setup access info"
-	mkdir ~/.ssh	
+	mkdir ~/.ssh
+	##TODO: if this doesn't exist, don't bother
 	head -n 7 ~/user_pub_key > ~/.ssh/authorized_keys
 	sudo rm ~/user_pub_key
 	chmod 600 ~/.ssh/authorized_keys
