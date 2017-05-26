@@ -111,6 +111,7 @@ sleep 30s
 dropdb odoo
 
 echo "Restoring db backup - this can take 5-10 mins, depending on the machine"
+sleep 5s
 if [ ! -f ~/*.gz ]; then
 	gunzip -ck *.gz | psql postgres
 else
