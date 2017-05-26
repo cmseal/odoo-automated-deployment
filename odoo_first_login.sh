@@ -83,8 +83,8 @@ sudo a2ensite "$vm_ip_address"-mobile
 sudo a2dissite 000-default
 
 # Setup odoo as service
-sudo mkdir /etc/odoo && sudo mv /home/odoo/odoo.conf /etc/odoo/odoo.conf
-sudo chown odoo: /etc/odoo/odoo.conf && sudo chmod 640 /etc/odoo/odoo.conf
+sudo mv /home/odoo/odoo.conf /etc/odoo.conf
+sudo chown odoo: /etc/odoo.conf && sudo chmod 640 /etc/odoo.conf
 sudo mv /home/odoo/odoo.service /etc/systemd/system/
 sudo mkdir /var/lib/odoo && sudo chown odoo:root /var/lib/odoo -R
 sudo mkdir /var/log/odoo && sudo touch /var/log/odoo/odoo.log && sudo chown -R odoo:root /var/log/odoo
@@ -100,6 +100,8 @@ sudo service apache2 reload
 
 # Start Odoo service and wait (first time running)
 sudo systemctl start odoo.service
+echo "Odoo is running for the first time"
+echo "This script allows 5 mins before continuing"
 sleep 5m
 
 # Stop Odoo service, drop the db and restore the one provided
@@ -117,11 +119,12 @@ fi
 sudo systemctl start odoo.service
 
 # Tidy up! #messybastard
-sudo rm ~/*.bz2 && sudo rm ~/*.gz
-sudo rm ~/wkhtmltox-0.12.2_linux-trusty-amd64.deb
-sudo rm ~/odoo_auto_install.sh
-sudo rm ~/cron-empty
-sudo rm ~/db_copy.sh
+sudo rm *.bz2 && sudo rm *.gz
+sudo rm wkhtmltox-0.12.2_linux-trusty-amd64.deb
+sudo rm odoo_auto_install.sh
+sudo rm cron-empty
+sudo rm db_copy.sh
 
 # Script completed!
-sudo touch ~/setup_completed
+sudo touch setup_completed
+echo "Setup completed. Odoo is running."
