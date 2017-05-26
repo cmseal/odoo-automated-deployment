@@ -72,7 +72,6 @@ if [ "$user" == "root" ]; then
 	
 	# Move files to Odoo home for second phase
 	mv ~/odoo-automated-deployment/* /home/odoo/
-	rmdir ~/odoo-automated-deployment
 	mv ~/*.bz2 /home/odoo/
 	mv ~/*.gz /home/odoo/
 	if [ -f ~/.ssh/authorized_keys ]; then
