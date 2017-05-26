@@ -85,10 +85,9 @@ sudo a2dissite 000-default
 # Setup odoo as service
 sudo mkdir /etc/odoo && sudo mv /home/odoo/odoo.conf /etc/odoo/odoo.conf
 sudo chown odoo: /etc/odoo/odoo.conf && sudo chmod 640 /etc/odoo/odoo.conf
-sudo mv /home/odoo/odoo-server /etc/init.d/
-sudo chmod 755 /etc/init.d/odoo-server && sudo chown root: /etc/init.d/odoo-server
-sudo mkdir /var/log/odoo && sudo touch /var/log/odoo/odoo.log
-sudo chown -R odoo:root /var/log/odoo
+sudo mv /home/odoo/odoo.service /etc/systemd/system/
+sudo mkdir /var/lib/odoo && sudo chown odoo:root /var/lib/odoo -R
+sudo mkdir /var/log/odoo && sudo touch /var/log/odoo/odoo.log && sudo chown -R odoo:root /var/log/odoo
 
 # Make manual script executable for dev
 sudo chmod +x ~/run_odoo.sh
@@ -100,11 +99,11 @@ sudo mv ~/config.php ~/mclaren/mobile/config.php
 sudo service apache2 reload
 
 # Start Odoo service and wait (first time running)
-sudo /etc/init.d/odoo-server start
+sudo systemctl start odoo.service
 sleep 5m
 
 # Stop Odoo service, drop the db and restore the one provided
-sudo /etc/init.d/odoo-server stop
+sudo systemctl stop odoo.service
 sleep 30s
 dropdb odoo
 
@@ -115,7 +114,7 @@ else
 fi
 	
 # Start Odoo with restored db
-sudo /etc/init.d/odoo-server start
+sudo systemctl start odoo.service
 
 # Tidy up! #messybastard
 sudo rm ~/*.bz2 && sudo rm ~/*.gz
