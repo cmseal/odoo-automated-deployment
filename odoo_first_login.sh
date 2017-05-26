@@ -1,5 +1,11 @@
-
 # Third phase
+
+# Absorb set variables from first and second phase script
+unipart_username=$(awk -F'"' '/^unipart_username=/ {print $2}' odoo_auto_install.sh )
+project_repo_name=$(awk -F'"' '/^project_repo_name=/ {print $2}' odoo_auto_install.sh )
+mobile_project_repo_name=$(awk -F'"' '/^mobile_project_repo_name=/ {print $2}' odoo_auto_install.sh )
+vm_ip_address=$(awk -F'"' '/^vm_ip_address=/ {print $2}' odoo_auto_install.sh )
+
 # Install PostgreSQL and create odoo user
 sudo apt-get install postgresql --assume-yes
 sudo su postgres sh -c "createuser -d -A $(whoami)"
