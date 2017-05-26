@@ -77,7 +77,14 @@ sudo a2ensite "$vm_ip_address"-mobile
 sudo a2dissite 000-default
 
 # Setup odoo as service
-#setup
+sudo mkdir /etc/odoo && cd /etc/odoo && sudo cp /home/odoo/odoo/debian/odoo.conf /etc/odoo/odoo-server.conf
+sudo chown odoo: /etc/odoo/odoo-server.conf && sudo chmod 640 /etc/odoo/odoo-server.conf
+sudo cp /hoem/odoo/odoo/debian/init /etc/init.d/odoo-server
+sudo chmod 755 /etc/init.d/odoo-server && sudo chown root: /etc/init.d/odoo-server
+sudo mkdir /var/log/odoo && sudo touch odoo-server.log
+sudo chown -R odoo:root /var/log/odoo
+# sudo nano /etc/init.d/odoo-server DAEMON=/home/odoo/odoo/odoo-bin
+# nano /etc/odoo/odoo-server.conf 
 
 # Make manual script executable for dev
 sudo chmod +x ~/run_odoo.sh
@@ -90,24 +97,24 @@ sudo service apache2 reload
 
 # Start Odoo service and wait (first time running)
 #sudo start
-sleep 5m
+#sleep 5m
 
 # Stop Odoo service, drop the db and restore the one provided
 #sudo stop
-sleep 30s
-dropdb odoo
+#sleep 30s
+#dropdb odoo
 
-if [ ! -f ~/*.gz ]; then
-	gunzip -ck *.gz | psql postgres
-else
-	bzcat *.bz2 | psql postgres
-fi
+#if [ ! -f ~/*.gz ]; then
+	#gunzip -ck *.gz | psql postgres
+#else
+	#bzcat *.bz2 | psql postgres
+#fi
 	
 # Start Odoo with restored db
 #sudo start
 
 # Tidy up! #messybastard
-sudo rm *.bz2 && sudo rm *.gz
+#sudo rm *.bz2 && sudo rm *.gz
 sudo rm wkhtmltox-0.12.2_linux-trusty-amd64.deb
 sudo rm odoo_auto_install.sh
 sudo rm cron-empty
