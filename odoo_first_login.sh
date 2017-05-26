@@ -66,6 +66,7 @@ sudo mv vm_ip_address.conf /etc/apache2/sites-available/"$vm_ip_address".conf
 sudo mv vm_ip_address-mobile.conf /etc/apache2/sites-available/"$vm_ip_address"-mobile.conf
 sudo sed -i -e 's/vm_ip_address/'"$vm_ip_address"'/g' /etc/apache2/sites-available/"$vm_ip_address".conf
 sudo sed -i -e 's/vm_ip_address/'"$vm_ip_address"'/g' /etc/apache2/sites-available/"$vm_ip_address"-mobile.conf
+sudo sed -i -e 's/Listen 80/Listen 80\nListen 81/g' /etc/apache2/ports.conf
 
 # Remove default Apache index and replace with redirect
 sudo rm /var/www/html/index.html
@@ -109,6 +110,7 @@ sudo systemctl stop odoo.service
 sleep 30s
 dropdb odoo
 
+echo "Restoring db backup - this can take 5-10 mins, depending on the machine"
 if [ ! -f ~/*.gz ]; then
 	gunzip -ck *.gz | psql postgres
 else
