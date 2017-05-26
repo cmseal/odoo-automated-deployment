@@ -1,5 +1,6 @@
 echo "Install PostgreSQL"
 sudo apt-get install postgresql --assume-yes
+sudo su postgres sh -c "createuser -d -A $(whoami)"
 
 sudo rm odoo_auto_install.sh
 echo "Remove setup cron job"
@@ -95,7 +96,7 @@ sudo service apache2 reload
 #echo "Stop Odoo service, drop the db and restore the one provided"
 #sudo systemctl odoo.service stop
 #sleep 30s
-dumpdb odoo
+dropdb odoo
 
 if [ ! -f ~/*.gz ]; then
 	gunzip -ck *.gz | psql postgres
