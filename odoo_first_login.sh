@@ -1,3 +1,6 @@
+echo "Install PostgreSQL"
+sudo apt-get install postgresql --assume-yes
+
 sudo rm odoo_auto_install.sh
 echo "Remove setup cron job"
 touch cron-empty
