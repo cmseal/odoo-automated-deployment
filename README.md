@@ -3,13 +3,13 @@ This repo creates a set of conf files and bash scripts, in order to minimise use
 
 The end result is:
 - Ubuntu updated
-- Odoo user created with SSH key access
+- Odoo user created with SSH key/password access
 - Odoo repo pulled
 - UDES project repos pulled
-- Odoo setup as a service
 - PostgreSQL setup
 - Apache and PHP 7 installed
-- Apache configured for main UDES and mobile sites
+- Apache configured for main UDES proxy and mobile sites
+- Odoo setup as a service
 - DB backup restored
 - Odoo started
 
@@ -17,4 +17,7 @@ This works for either a locally hosted development instance, or a testing/UAT in
 
 Additionlly, the following is possible for developer convenience:
 - SFTP access
-- Running Odoo directly, once the service is stopped
+- Running Odoo directly, either via ./run_odoo.sh or ./odoo-bin... (once the service is stopped)
+
+## Technical Setup
+The following are the specifics for the setup, once the scripts have been completed
