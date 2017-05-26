@@ -2,27 +2,18 @@
 
 ###### BASIC INSTRUCTIONS ######
 #
-# 1) Set the four script variables below
-#
+# 1) Set the script variables below
 # 2) Copy a single db backup ending either .bz2 or .gz to ~/ for root
-#
 # 3) Run: chmod +x odoo_auto_install.sh
-#
 # 4) Run: ./odoo_auto_install.sh
-#
-# 5) After the server disconnects you to reboot, reconnect but as the odoo user
-#
+# 5) After the server disconnects you to reboot, reconnect ssh -A odoo@
 # 6) Run: ./odoo_first_login.sh in the Odoo user folder
+# 7) The automated process will continue, and a "Setup Complete" message will show
 #
-# 7) The automated process will continue, and complete when 'setup_complete' file appears in Odoo user folder
+#    At this point, Odoo is setup and started as a service
 #
-#    At this point, Odoo is setup and started as a service (service odoo start|stop|reload)
-#
-#    The main Odoo interface will be on: http://<vm_ip_address>
-#
-#    The mobile interface will be on: http://<vm_ip_address>:81
-#
-#    Logging is to /var/log/odoo/odoo.log
+#    Odoo interface: http://<vm_ip_address>
+#    Mobile interface: http://<vm_ip_address>:81
 #
 #    Technical information is in README.md, if you've not used this before
 #
@@ -31,16 +22,16 @@
 
 ## Script Variables ##
 
-# Your unipart username for git access
-unipart_username="chrisseal"
-
-# Project repo name to clone (minus .git), e.g. project_repo_name="mclaren"
-project_repo_name="mclaren"
+# Your unipart unix username for git access
+unipart_username=""
 
 # VM IP Address (public IP for Digital Ocean, local VM IP for laptop hosted), e.g. vm_ip_address="127.0.0.1"
-vm_ip_address="46.101.41.217"
+vm_ip_address=""
 
-# Mobile project repo to clone (minus .git), e.g. mobile_project_repo_name="odoo_mobile"
+# Project repo name to clone (minus .git)
+project_repo_name="mclaren"
+
+# Mobile project repo to clone (minus .git)
 mobile_project_repo_name="odoo_mobile"
 
 ######  Please don't edit below this line  ######
