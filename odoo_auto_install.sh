@@ -71,7 +71,7 @@ if [ "$user" == "root" ]; then
 	echo "%sudo	ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 	
 	# Move files to Odoo home for second phase
-	mv ~/odoo-automated-deployment/*.* /home/odoo/
+	mv ~/odoo-automated-deployment/* /home/odoo/
 	rmdir odoo-automated-deployment
 	mv ~/*.bz2 /home/odoo/
 	mv ~/*.gz /home/odoo/
