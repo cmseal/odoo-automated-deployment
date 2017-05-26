@@ -6,7 +6,7 @@ sudo rm odoo_auto_install.sh
 echo "Remove setup cron job"
 touch cron-empty
 crontab -u odoo cron-empty
-sudo crontab -u postgres cron-empty
+sudo rm cron-empty
 
 echo "Clone Odoo from git"
 cd ~
